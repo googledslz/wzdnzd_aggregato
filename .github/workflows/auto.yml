@@ -1,4 +1,4 @@
-name: Generate  auto.yml
+name: Generate auto.yml
 
 on:
   schedule:
@@ -8,29 +8,37 @@ on:
 jobs:
   build-and-commit:
     runs-on: ubuntu-latest
+    permissions:  # 关键修复：添加写入权限
+      contents: write  # 允许推送代码
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取完整 Git 历史（避免推送冲突）
 
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.10'
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
 
-    - name: Install dependencies
-      run: |
-        pip3 install pyYAML requests tqdm
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Collect proxies
-      run: |
-        python -u subscribe/collect.py -s  
-    - name: Configure Git
-      run: |
-        git config user.name "GitHub Actions Bot"
-        git config user.email "actions@github.com"
-    - name: Commit and push changes
-      run: |
-        git add data
-        git commit -m "Add generated output.yaml"
-        git push
+      - name: Install dependencies
+        run: |
+          pip3 install pyYAML requests tqdm
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Collect proxies
+        run: |
+          python -u subscribe/collect.py -s
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+
+      - name: Commit and push changes
+        run: |
+          git add data
+          git commit -m "Add generated output.yaml"
+          git pull --rebase  # 避免因远程更新导致冲突
+          git push
