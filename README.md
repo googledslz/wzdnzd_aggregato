@@ -13,6 +13,8 @@
 
 ## 使用方法
 > 可前往 [Issue #91](https://github.com/wzdnzd/aggregator/issues/91) 食用**共享订阅**，量大质优。**请勿浪费**
+>
+> 
  
 略，自行探索。我才不会告诉你入口是 `collect.py` 和 `process.py`。**强烈建议使用后者，前者只是个小玩具**，配置参考 `subscribe/config/config.default.json`
 
@@ -20,6 +22,11 @@
 Clash订阅：https://imperialb.in/r/gynacebx 『推荐使用基于 mihomo 内核的客户端』
 
 V2Ray订阅：https://imperialb.in/r/eav0dzoa
+
+Clash订阅：https://imperialb.in/r/crbvnnsm 『推荐使用基于 mihomo 内核的客户端』
+
+V2Ray订阅：https://imperialb.in/r/xwpnhgtd
+
 
 ## 免责申明
 + 本项目仅用作学习爬虫技术，请勿滥用，不要通过此工具做任何违法乱纪或有损国家利益之事
