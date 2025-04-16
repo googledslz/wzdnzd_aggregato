@@ -2,20 +2,20 @@ name: Generate auto.yml
 
 on:
   schedule:
-    - cron: '1 */4 * * *'
-  workflow_dispatch:
+    - cron: '1 */4 * * *'  # 每 4 小时执行一次
+  workflow_dispatch:        # 支持手动触发
 
 jobs:
   build-and-commit:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 必须要有写入权限
+      contents: write  # 需要写入权限才能推送代码
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # 获取完整历史记录
+          fetch-depth: 0  # 获取完整历史，确保 git pull 正常工作
 
       - name: Set up Python
         uses: actions/setup-python@v3
@@ -41,16 +41,18 @@ jobs:
 
       - name: Commit and push
         run: |
-          # 重置所有未跟踪和修改的文件（确保工作目录干净）
+          # 清理工作区，保持干净
           git reset --hard
           git clean -fd
 
-          # 拉取最新代码（避免冲突）
+          # 拉取远程最新代码，避免冲突
           git pull origin main
 
-          # 重新添加文件并提交
+          # 添加新生成的文件
           git add data/
-          git commit -m "Add generated output.yaml (Automated)"
 
-          # 强制推送（谨慎使用，适用于自动化场景）
+          # 提交变更，如果没有变更不会导致失败
+          git commit -m "Add generated output.yaml (Automated)" || echo "Nothing to commit"
+
+          # 推送到远程仓库
           git push origin main
